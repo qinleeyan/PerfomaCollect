@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "dual-model-generator"
+version = "0.1.0"
+description = "Python CLI/TUI app to generate Q&A datasets using two models"
+requires-python = ">=3.11"
+dependencies = [
+    "httpx>=0.24",
+    "pydantic>=2.5",
+    "textual>=0.8.0",
+    "openpyxl>=3.1.0",
+]
+
+[project.scripts]
+dual-model-generator = "src.main:main"
