@@ -12,7 +12,8 @@ Screen {
     border-bottom: solid $primary;
 }
 
-ModelSetupScreen #header-card {
+ModelSetupScreen #header-card,
+ViewConfigScreen #header-card {
     height: 3;
 }
 
