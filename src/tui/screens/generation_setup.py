@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from textual.app import ComposeResult
 from textual.containers import Container, Horizontal
 from textual.screen import Screen
@@ -36,6 +37,11 @@ except (ImportError, ModuleNotFoundError):
 
 
 class GenerationSetupScreen(Screen):
+    BINDINGS = [
+        ("escape", "cancel", "Cancel"),
+        ("ctrl+c", "cancel", "Cancel"),
+    ]
+
     def compose(self) -> ComposeResult:
         yield Header()
         with Container(classes="form-container"):
@@ -88,9 +94,12 @@ class GenerationSetupScreen(Screen):
             target_input = self.query_one("#input-target", Input)
             target_input.disabled = not is_limited
 
+    def action_cancel(self) -> None:
+        self.app.pop_screen()
+
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.app.pop_screen()
+            self.action_cancel()
         elif event.button.id == "btn-start-job":
             topic = self.query_one("#input-topic", Input).value.strip()
             err_lbl = self.query_one("#error-label", Static)

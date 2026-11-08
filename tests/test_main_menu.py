@@ -12,6 +12,7 @@ from src.tui.screens.main_menu import MainMenuScreen
 @pytest.mark.asyncio
 async def test_main_menu_initial_status(monkeypatch, tmp_path: Path):
     monkeypatch.setattr("src.config.config_manager.DEFAULT_CONFIG_PATH", tmp_path / "cfg.json")
+    monkeypatch.setattr("src.config.config_manager.LOCAL_CONFIG_PATH", tmp_path / "local_cfg.json")
     app = DatasetGeneratorApp()
     async with app.run_test() as pilot:
         assert isinstance(app.screen, MainMenuScreen)

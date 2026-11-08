@@ -9,6 +9,13 @@ from src.config.schema import ModelConfig
 
 
 class ModelSetupScreen(Screen):
+    BINDINGS = [
+        ("escape", "cancel", "Cancel"),
+    ]
+
+    def action_cancel(self) -> None:
+        self.app.pop_screen()
+
     def __init__(self, target: str) -> None:
         super().__init__()
         self.target = target

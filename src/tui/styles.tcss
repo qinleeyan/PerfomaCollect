@@ -4,19 +4,12 @@ Screen {
 
 #header-card {
     dock: top;
-    height: 5;
+    height: 3;
     background: $primary-background;
     color: $text;
     content-align: center middle;
     text-style: bold;
     border-bottom: solid $primary;
-}
-
-ModelSetupScreen #header-card,
-ViewConfigScreen #header-card,
-GenerationSetupScreen #header-card,
-ProgressScreen #header-card {
-    height: 3;
 }
 
 .status-badge-ok {
@@ -41,6 +34,43 @@ ProgressScreen #header-card {
     border: solid $accent;
     background: $surface-darken-1;
     overflow-y: auto;
+}
+
+ProgressScreen .form-container {
+    width: 96%;
+    height: 96%;
+    margin: 1 2;
+    padding: 1 2;
+}
+
+#split-container {
+    height: 1fr;
+    margin-top: 1;
+    margin-bottom: 1;
+}
+
+.log-column {
+    width: 1fr;
+    height: 100%;
+    border: solid $accent;
+    background: $surface-darken-2;
+    margin: 0 1;
+    padding: 0;
+}
+
+.column-header {
+    dock: top;
+    height: 1;
+    background: $accent-darken-1;
+    color: $text;
+    text-style: bold;
+    text-align: center;
+}
+
+RichLog {
+    height: 1fr;
+    background: transparent;
+    padding: 0 1;
 }
 
 .form-label {

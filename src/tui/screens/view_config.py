@@ -10,6 +10,13 @@ from src.config.schema import AppConfig, PreferencesConfig
 
 class ViewConfigScreen(Screen):
     TITLE = "CURRENT CONFIGURATION"
+    BINDINGS = [
+        ("escape", "back", "Back"),
+        ("enter", "back", "Back"),
+    ]
+
+    def action_back(self) -> None:
+        self.app.pop_screen()
 
     def __init__(self, config: AppConfig | None = None) -> None:
         super().__init__()
