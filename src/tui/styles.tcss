@@ -14,7 +14,8 @@ Screen {
 
 ModelSetupScreen #header-card,
 ViewConfigScreen #header-card,
-GenerationSetupScreen #header-card {
+GenerationSetupScreen #header-card,
+ProgressScreen #header-card {
     height: 3;
 }
 
