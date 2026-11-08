@@ -33,6 +33,7 @@ Screen {
     padding: 1 2;
     border: solid $accent;
     background: $surface-darken-1;
+    overflow-y: auto;
 }
 
 .form-label {
