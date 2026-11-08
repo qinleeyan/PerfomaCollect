@@ -1,9 +1,13 @@
-"""Entry point for the Dual‑Model Dataset Generator TUI application."""
+"""Entry point for the Dual-Model Dataset Generator TUI application."""
 
 from __future__ import annotations
 
+from src.tui.app import DatasetGeneratorApp
+
+
 def main() -> None:
-    print("Dual‑Model Dataset Generator")
+    app = DatasetGeneratorApp()
+    app.run()
 
 
 if __name__ == "__main__":

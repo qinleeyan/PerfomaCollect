@@ -1,0 +1,41 @@
+Screen {
+    background: $surface;
+}
+
+#header-card {
+    dock: top;
+    height: 5;
+    background: $primary-background;
+    color: $text;
+    content-align: center middle;
+    text-style: bold;
+    border-bottom: solid $primary;
+}
+
+.status-badge-ok {
+    color: $success;
+    text-style: bold;
+}
+
+.status-badge-missing {
+    color: $error;
+    text-style: bold;
+}
+
+.menu-button {
+    width: 100%;
+    margin-bottom: 1;
+}
+
+.form-container {
+    width: 80%;
+    margin: 1 2;
+    padding: 1 2;
+    border: solid $accent;
+    background: $surface-darken-1;
+}
+
+.form-label {
+    margin-top: 1;
+    color: $text-muted;
+}
