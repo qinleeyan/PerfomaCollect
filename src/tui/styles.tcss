@@ -12,6 +12,10 @@ Screen {
     border-bottom: solid $primary;
 }
 
+ModelSetupScreen #header-card {
+    height: 3;
+}
+
 .status-badge-ok {
     color: $success;
     text-style: bold;
@@ -39,4 +43,19 @@ Screen {
 .form-label {
     margin-top: 1;
     color: $text-muted;
+}
+
+.button-row {
+    height: auto;
+    margin-top: 1;
+    align: center middle;
+}
+
+.button-row Button {
+    margin-right: 1;
+}
+
+#test-result-label {
+    margin-top: 1;
+    height: auto;
 }
