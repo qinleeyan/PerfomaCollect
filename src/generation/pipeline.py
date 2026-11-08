@@ -55,21 +55,25 @@ class GenerationPipeline:
     ) -> List[str]:
         """Request a batch of questions from Question Model."""
         system_prompt = (
-            "You are a question-generation model.\n"
-            "Your only task is to generate clear, useful, and diverse questions "
-            "based on the topic provided by the user.\n"
-            "Rules:\n"
-            "- Generate questions only.\n"
-            "- Do not answer any question.\n"
-            "- Do not include explanations.\n"
-            "- Avoid duplicate or near-duplicate questions.\n"
-            "- Return valid structured JSON matching the requested schema."
+            "You are an expert brainstorming and question-generation model.\n\n"
+            "Your sole mission is to generate diverse, insightful, and thought-provoking questions "
+            "based on the topic provided by the user.\n\n"
+            "Key Rules:\n"
+            "1. Topic Flexibility: The user topic may be a single keyword, a sentence, or a detailed description. "
+            "Brainstorm deeply around it from multiple angles (foundational concepts, deep technical details, edge cases, "
+            "real-world case studies, comparisons, and best practices).\n"
+            "2. Languages: You must generate questions ONLY in Indonesian or English (or a natural mix of both across the batch). "
+            "Do not use any other language.\n"
+            "3. Questions Only: Generate pure questions. Do NOT answer them. Do NOT add preamble, summaries, or conversational remarks.\n"
+            "4. Uniqueness: Avoid duplicate, repetitive, or near-identical questions.\n"
+            "5. Strict JSON Output: You must return valid JSON matching the exact requested schema."
         )
 
         user_content = (
             f"Topic: {topic}\n"
-            f"Generate {count} diverse questions about this topic.\n\n"
-            "Return valid JSON strictly matching this structure:\n"
+            f"Generate {count} diverse questions exploring different aspects of this topic.\n"
+            "Languages allowed: Indonesian and English only.\n\n"
+            "Return strict JSON matching this structure:\n"
             '{\n  "questions": [\n    {"question": "..."}\n  ]\n}'
         )
 
@@ -135,23 +139,26 @@ class GenerationPipeline:
 
         return questions[:count]
 
-    def generate_answer(self, topic: str, question: str) -> str:
-        """Request answer for a single question from Answer Model."""
+    def generate_answer(self, question: str) -> str:
+        """Request answer for a single question from Answer Model (no topic context provided)."""
         system_prompt = (
-            "You are an answer-generation model.\n"
-            "Your only task is to answer the user's question accurately and clearly.\n"
-            "Rules:\n"
-            "- Answer the given question directly.\n"
-            "- Do not generate additional questions.\n"
-            "- Do not change the original question.\n"
-            "- If the answer is uncertain, state the uncertainty.\n"
-            "- Return plain text."
+            "You are an expert knowledge model specialized in answering questions thoroughly and accurately.\n\n"
+            "Your sole task is to provide a comprehensive, clear, and high-quality answer to the question provided.\n\n"
+            "Key Rules:\n"
+            "1. No Context Assumption: You will only receive a standalone question. Answer it directly and comprehensively "
+            "based solely on what is asked.\n"
+            "2. Language Matching: Detect the language of the question:\n"
+            "   - If the question is in Indonesian, you MUST answer entirely in Indonesian.\n"
+            "   - If the question is in English, you MUST answer entirely in English.\n"
+            "3. Mandatory Markdown Format: Format your output using clean GitHub-flavored Markdown (use headers `##`, "
+            "bullet points, bold text for key terms, tables, or fenced code blocks where appropriate).\n"
+            "4. No Extraneous Content: Do NOT generate follow-up questions, do NOT repeat the question as a title, "
+            "and do NOT add conversational filler (e.g., 'Sure, here is your answer:')."
         )
 
         user_content = (
-            f"Topic context: {topic}\n\n"
             f"Question:\n{question}\n\n"
-            "Provide a clear and informative answer."
+            "Provide a comprehensive, well-structured answer in Markdown, matching the language of the question."
         )
 
         url = f"{self.answer_model.base_url.rstrip('/')}/chat/completions"

@@ -82,5 +82,5 @@ def test_generation_pipeline_mock(tmp_path: Path):
         assert len(questions) == 1
         assert questions[0] == "What is Python?"
 
-        answer = pipeline.generate_answer("Python", questions[0])
+        answer = pipeline.generate_answer(questions[0])
         assert "high-level programming language" in answer

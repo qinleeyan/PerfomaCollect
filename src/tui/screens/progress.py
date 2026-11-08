@@ -217,7 +217,7 @@ class ProgressScreen(Screen):
                 )
 
                 try:
-                    ans = pipeline.generate_answer(self.topic, q)
+                    ans = pipeline.generate_answer(q)
                     record = {
                         "id": q_num,
                         "topic": self.topic,
