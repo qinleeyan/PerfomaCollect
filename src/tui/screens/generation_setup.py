@@ -27,6 +27,7 @@ except (ImportError, ModuleNotFoundError):
             target_count: int = 50,
             output_format: str = "jsonl",
             filename: str = "dataset_output",
+            answer_format: str = "markdown",
         ) -> None:
             super().__init__()
             self.topic = topic
@@ -34,6 +35,7 @@ except (ImportError, ModuleNotFoundError):
             self.target_count = target_count
             self.output_format = output_format
             self.filename = filename
+            self.answer_format = answer_format
 
 
 class GenerationSetupScreen(Screen):
@@ -57,6 +59,18 @@ class GenerationSetupScreen(Screen):
 
             yield Label("Target Records (Limited Mode) :", classes="form-label", id="lbl-target")
             yield Input(value="50", id="input-target", type="integer")
+
+            yield Label("Answer Format (Output Style) :", classes="form-label")
+            yield Select[str](
+                options=[
+                    ("Markdown (Formatted, bullet points, headers)", "markdown"),
+                    ("Plain Text (Raw clean text, no symbols)", "text"),
+                    ("JSON (Structured JSON object)", "json"),
+                ],
+                value="markdown",
+                id="select-answer-format",
+                allow_blank=False,
+            )
 
             yield Label("Output Format :", classes="form-label")
             yield Select[str](
@@ -126,6 +140,12 @@ class GenerationSetupScreen(Screen):
             else:
                 fmt = "jsonl"
 
+            answer_format_select = self.query_one("#select-answer-format", Select)
+            if not answer_format_select.is_blank() and answer_format_select.value:
+                ans_fmt = str(answer_format_select.value)
+            else:
+                ans_fmt = "markdown"
+
             filename = self.query_one("#input-filename", Input).value.strip() or f"dataset_{topic}"
 
             try:
@@ -140,5 +160,6 @@ class GenerationSetupScreen(Screen):
                     target_count=target_count,
                     output_format=fmt,
                     filename=filename,
+                    answer_format=ans_fmt,
                 )
             )

@@ -139,8 +139,33 @@ class GenerationPipeline:
 
         return questions[:count]
 
-    def generate_answer(self, question: str) -> str:
+    def generate_answer(self, question: str, answer_format: str = "markdown") -> str:
         """Request answer for a single question from Answer Model (no topic context provided)."""
+        fmt = answer_format.lower().strip()
+        if fmt in ("text", "plain", "plain_text"):
+            format_rule = (
+                "3. Plain Text Format: You MUST output pure, unformatted plain text only. "
+                "Do NOT use any Markdown formatting whatsoever (no `#`, `*`, `**`, `_`, bullet points, backticks, or code blocks). "
+                "Write cleanly in paragraphs."
+            )
+            user_instruction = "Provide a comprehensive, clear answer in pure plain text (no Markdown, no special symbols), matching the language of the question."
+        elif fmt == "json":
+            format_rule = (
+                "3. Strict JSON Format: You MUST output valid, parseable JSON matching this schema:\n"
+                '{\n  "answer": "comprehensive explanation...",\n  "key_points": ["point 1", "point 2"]\n}\n'
+                "Return ONLY the raw JSON string without Markdown formatting or code fence blocks."
+            )
+            user_instruction = (
+                'Provide a comprehensive answer formatted strictly as a JSON object with keys "answer" and "key_points". '
+                'Do not wrap in backticks or markdown fences.'
+            )
+        else:  # default markdown
+            format_rule = (
+                "3. Mandatory Markdown Format: Format your output using clean GitHub-flavored Markdown (use headers `##`, "
+                "bullet points, bold text for key terms, tables, or fenced code blocks where appropriate)."
+            )
+            user_instruction = "Provide a comprehensive, well-structured answer in Markdown, matching the language of the question."
+
         system_prompt = (
             "You are an expert knowledge model specialized in answering questions thoroughly and accurately.\n\n"
             "Your sole task is to provide a comprehensive, clear, and high-quality answer to the question provided.\n\n"
@@ -150,15 +175,14 @@ class GenerationPipeline:
             "2. Language Matching: Detect the language of the question:\n"
             "   - If the question is in Indonesian, you MUST answer entirely in Indonesian.\n"
             "   - If the question is in English, you MUST answer entirely in English.\n"
-            "3. Mandatory Markdown Format: Format your output using clean GitHub-flavored Markdown (use headers `##`, "
-            "bullet points, bold text for key terms, tables, or fenced code blocks where appropriate).\n"
+            f"{format_rule}\n"
             "4. No Extraneous Content: Do NOT generate follow-up questions, do NOT repeat the question as a title, "
             "and do NOT add conversational filler (e.g., 'Sure, here is your answer:')."
         )
 
         user_content = (
             f"Question:\n{question}\n\n"
-            "Provide a comprehensive, well-structured answer in Markdown, matching the language of the question."
+            f"{user_instruction}"
         )
 
         url = f"{self.answer_model.base_url.rstrip('/')}/chat/completions"
@@ -184,6 +208,8 @@ class GenerationPipeline:
             data = resp.json()
 
         answer = data["choices"][0]["message"]["content"].strip()
+        if fmt == "json":
+            answer = clean_json_response(answer)
         return answer
 
 

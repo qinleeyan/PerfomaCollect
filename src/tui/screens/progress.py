@@ -25,6 +25,7 @@ class ProgressScreen(Screen):
         output_format: str = "jsonl",
         filename: str = "dataset_output",
         output_dir: Optional[Path] = None,
+        answer_format: str = "markdown",
     ) -> None:
         super().__init__()
         self.topic = topic
@@ -33,6 +34,7 @@ class ProgressScreen(Screen):
         self.output_format = output_format
         self.filename = filename
         self.output_dir = output_dir or Path("output")
+        self.answer_format = answer_format
 
         self.is_stopped = False
         self.is_done = False
@@ -48,6 +50,7 @@ class ProgressScreen(Screen):
             mode_str = f"Limited ({self.target_count} records)" if self.is_limited else "Unlimited Mode"
             info = (
                 f"Topic: [bold]{self.topic}[/bold] | Mode: {mode_str} | "
+                f"Answer: [cyan]{self.answer_format.upper()}[/cyan] | "
                 f"Format: {self.output_format.upper()} | File: {self.filename}.{self.output_format}"
             )
             yield Static(info, id="lbl-job-info")
@@ -217,7 +220,7 @@ class ProgressScreen(Screen):
                 )
 
                 try:
-                    ans = pipeline.generate_answer(q)
+                    ans = pipeline.generate_answer(q, answer_format=self.answer_format)
                     record = {
                         "id": q_num,
                         "topic": self.topic,
